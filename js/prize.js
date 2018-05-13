@@ -1,6 +1,6 @@
 "use strict";
 
-var PrizerGame = function () {
+var Prizerdoc = function () {
     LocalContractStorage.defineMapProperty(this, "doc", null)
 };
 Prizerdoc.prototype = {

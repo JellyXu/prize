@@ -7,11 +7,20 @@ var nebPay = new NebPay();
 var dappAddress = 'n1Pm2EVNCaafggZxTY6FioW9qYawcs216pE'; //改成我的地址
 var nameArr = []
 var phoneArr = []
+var buttonSide = $("#buttonSide")
+var $name = $(".name")
+var $phone = $(".phone")
+var $prizeBox = $("#prizeBox")
+var $joinBox = $("#joinBox")
+var $btnTxt = $('#btntxt')
 init()
-$("#prizeBox").hide()
+$prizeBox.hide()
 function init() {
 	if (typeof (webExtensionWallet) !== "undefined") {
 		$("#noExtension").hide()
+		buttonSide.show()
+	} else {
+		buttonSide.hide()
 	}
 	fixList();
 	timer = setInterval(function () {
@@ -20,10 +29,10 @@ function init() {
 }
 
 $("#addPerson").click(function () {
-	var name = $('.name').text()
-	var phone = $('.phone').text()
+	var name = $name.text()
+	var phone = $phone.text()
 	// 判断是否有重复的
-	if($.inArray(name, nameArr) || $.inArray(phone, phoneArr)) {
+	if ($.inArray(name, nameArr) || $.inArray(phone, phoneArr)) {
 		return
 	}
 	var to = dappAddress;
@@ -79,13 +88,15 @@ function getStart() {
 
 function fixList() {
 	var result = getStatus()
-	var joinList = $("#joinList")
-	nameArr = result.name
-	phoneArr = result.phone
-	num = nameArr.length
-	joinList.html("")
-	for (var i = 0; i < num; i++) {
-		$('#joinList .list').prepend("<p>" + td + ' ' + names[i] + "-" + phones[i] + "</p>");
+	if (result) {
+		var joinList = $("#joinList")
+		nameArr = result.name
+		phoneArr = result.phone
+		num = nameArr.length
+		joinList.html("")
+		for (var i = 0; i < num; i++) {
+			$('#joinList .list').prepend("<p>" + td + ' ' + names[i] + "-" + phones[i] + "</p>");
+		}
 	}
 }
 
@@ -93,25 +104,25 @@ function fixList() {
 function start() {
 	if (runing) {
 		runing = false;
-		$("#prizeBox").show()
-		$("#joinBox").hide()
-		$('#btntxt').removeClass('start').addClass('stop');
+		$prizeBox.show()
+		$joinBox.hide()
+		$btnTxt.removeClass('start').addClass('stop');
 		// 设置添加按钮不可用
-		$('#btntxt').html('停止');
+		$btnTxt.html('停止');
 		startNum();
 	} else {
 		runing = true;
 		var result = getStart()
 		var name = result.name
 		var phone = result.phone
-		$("#prizeBox").hide()
-		$("#joinBox").show()
-		$('.name').text(name)
-		$('.phone').text(phone)
+		$prizeBox.hide()
+		$joinBox.show()
+		$name.text(name)
+		$phone.text(phone)
 		$('#prizeList').prepend("<p>" + td + ' ' + name + "-" + phone + "</p>");
-		$('#btntxt').removeClass('stop').addClass('start');
+		$btnTxt.removeClass('stop').addClass('start');
 		// 设置添加按钮可用
-		$('#btntxt').html('抽奖');
+		$btnTxt.html('抽奖');
 		stop();
 	}
 
@@ -119,8 +130,8 @@ function start() {
 //循环参加名单
 function startNum() {
 	var showNum = Math.floor(Math.random() * num);
-	$('.name')(nameArr[showNum]);
-	$('.phone')(phoneArr[showNum]);
+	$name(nameArr[showNum]);
+	$phone(phoneArr[showNum]);
 	t = setTimeout(startNum, 0);
 }
 //停止跳动

@@ -9,6 +9,12 @@
 .start,.stop{float:right;width:200px;height:80px;line-height:80px;text-align:center;font-size:64px;border-radius:10px;margin:50px;color:#ffffff;cursor: pointer;margin-top: 20px;}
 .start{background: #24ADD7;}
 .stop{background: #FC6666;}
+#noExtension{
+	color: white;
+    letter-spacing: 0.05em;
+	opacity: 0.9;
+	font-size: 20px;
+}
 #getPerson {
 	background: green;
 	float: left;
