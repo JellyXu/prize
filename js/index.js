@@ -4,7 +4,7 @@ var t
 
 var NebPay = require("nebpay"); //https://github.com/nebulasio/nebPay
 var nebPay = new NebPay();
-var dappAddress = 'n1pRb5tULaYU8rQxSEDRb3HzfU6kecbYa2e';
+var dappAddress = 'n1je5zGC8LRrgD31vqYJNUcrnZe6po1VSNQ';
 var nameArr = []
 var phoneArr = []
 var buttonSide = $("#buttonSide")
@@ -12,7 +12,10 @@ var $name = $(".name")
 var $phone = $(".phone")
 var $prizeBox = $("#prizeBox")
 var $joinBox = $("#joinBox")
-var $btnTxt = $('#btntxt')
+var $addPerson = $("#addPerson")
+var $reset = $("#reset")
+var $getPerson = $("#getPerson")
+var $btnTxt = $('#getPerson')
 init()
 $prizeBox.hide()
 function init() {
@@ -25,7 +28,7 @@ function init() {
 	fixList();
 	timer = setInterval(function () {
 		fixList();
-	}, 15000);
+	}, 150000);
 }
 
 $("#addPerson").click(function () {
@@ -43,11 +46,13 @@ $("#addPerson").click(function () {
 	var to = dappAddress;
 	var value = "0";
 	var callFunction = "add";
-	var callArgs = JSON.stringify([name, phone]);
+	var callArgs = JSON.stringify([{ name: name, phone: phone }]);
 	nebPay.call(to, value, callFunction, callArgs, { //使用nebpay的simulateCall接口去执行get查询, 模拟执行.不发送交易,不上链
 		listener: function (resp) {
 			// 直接这里更新，不需要再次get
 			num += 1
+			$joinBox.show()
+			$prizeBox.hide()
 			nameArr.push(name)
 			phoneArr.push(phone)
 			$('#joinList').prepend("<p>" + name + "-" + phone + "</p>");
@@ -55,26 +60,28 @@ $("#addPerson").click(function () {
 	});
 })
 
-$("#getPerson").click(function () {
+$getPerson.click(function () {
 	start()
 })
 
-function getStart() {
+$reset.click(function () {
 	var to = dappAddress;
 	var value = "0";
-	var callFunction = "start";
-	var callArgs;
-	var self = {}
-	nebPay.simulateCall(to, value, callFunction, callArgs, { //使用nebpay的simulateCall接口去执行get查询, 模拟执行.不发送交易,不上链
+	var callFunction = "restart"
+	var callArgs = JSON.stringify(["reset"]);
+	nebPay.call(to, value, callFunction, callArgs, { //使用nebpay的simulateCall接口去执行get查询, 模拟执行.不发送交易,不上链
 		listener: function (resp) {
 			var doc = JSON.parse(resp.result);
-			self.name = doc.name;
-			self.phone = doc.phone;
+			if (doc === 1) {
+				nameArr = []
+				phoneArr = []
+				num = 0
+				$('#joinList').html("")
+				$('#prizeList').html("")
+			}
 		}
-	});
-	return self
-}
-
+	})
+})
 function fixList() {
 	var to = dappAddress;
 	var value = "0";
@@ -83,13 +90,12 @@ function fixList() {
 	nebPay.simulateCall(to, value, callFunction, callArgs, { //使用nebpay的simulateCall接口去执行get查询, 模拟执行.不发送交易,不上链
 		listener: function (resp) {
 			var doc = JSON.parse(resp.result);
-			var joinList = $("#joinList")
 			nameArr = doc.name
 			phoneArr = doc.phone
 			num = nameArr.length
-			joinList.html("")
+			$('#joinList').html("")
 			for (var i = 0; i < num; i++) {
-				$('#joinList .list').prepend("<p>" + nameArr[i] + "-" + phoneArr[i] + "</p>");
+				$('#joinList').prepend("<p>" + nameArr[i] + "-" + phoneArr[i] + "</p>");
 			}
 		}
 	})
@@ -102,24 +108,37 @@ function start() {
 		runing = false;
 		$prizeBox.show()
 		$joinBox.hide()
+		$reset.hide()
+		$addPerson.hide()
 		$btnTxt.removeClass('start').addClass('stop');
 		// 设置添加按钮不可用
 		$btnTxt.html('停止');
 		startNum();
 	} else {
 		runing = true;
-		var result = getStart()
-		var name = result.name
-		var phone = result.phone
-		$prizeBox.hide()
-		$joinBox.show()
-		$name.val(name)
-		$phone.val(phone)
-		$('#prizeList').prepend("<p>" + td + ' ' + name + "-" + phone + "</p>");
-		$btnTxt.removeClass('stop').addClass('start');
-		// 设置添加按钮可用
-		$btnTxt.html('抽奖');
-		stop();
+		var to = dappAddress;
+		var value = "0";
+		var callFunction = "start";
+		var callArgs;
+		var self = {}
+		nebPay.simulateCall(to, value, callFunction, callArgs, { //使用nebpay的simulateCall接口去执行get查询, 模拟执行.不发送交易,不上链
+			listener: function (resp) {
+				var doc = JSON.parse(resp.result);
+				var name = doc.name
+				var phone = doc.phone
+				$joinBox.hide()
+				$prizeBox.show()
+				$reset.show()
+				$addPerson.show()
+				$name.val(name)
+				$phone.val(phone)
+				$('#prizeList').prepend("<p>" + ' ' + name + "-" + phone + "</p>");
+				$btnTxt.removeClass('stop').addClass('start');
+				// 设置添加按钮可用
+				$btnTxt.html('抽奖');
+				stop();
+			}
+		});
 	}
 
 }

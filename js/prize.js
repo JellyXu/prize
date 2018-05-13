@@ -15,8 +15,8 @@ Prizerdoc.prototype = {
     add: function (person) {
         var status = parseInt(this.doc.get('status'));
         console.log("1111111111这里" + person)
-        var name = person[0]
-        var phone = person[1]
+        var name = person.name
+        var phone = person.phone
         if(status === 0){
             this.reset();
         }
@@ -49,13 +49,14 @@ Prizerdoc.prototype = {
 
     start: function() {
         var doc = this.get()
+        var nameArr = doc.name
+        var phoneArr = doc.phone
         var length = doc.name.length
-        var num = length + 1
-        var targetNumber = parseInt(Math.random() * num);
+        var targetNumber = parseInt(Math.random() * length)
         var name = nameArr[targetNumber]
         var phone = phoneArr[targetNumber]
-        nameArr.splice($.inArray(nameArr[targetNumber], nameArr), 1);
-	    phoneArr.splice($.inArray(phoneArr[targetNumber], phoneArr), 1);
+        nameArr.splice(targetNumber, 1);
+	    phoneArr.splice(targetNumber, 1);
         this.doc.put('docName', nameArr)
         this.doc.put('docPhone', phoneArr)
         return {
@@ -64,14 +65,14 @@ Prizerdoc.prototype = {
         }
     },
 
-    restart : function() {
-        var status = this.doc.get('status');
-        if(status === 0){
+    restart : function(int) {
+        if(int == "reset") {
             this.doc.put('status', 1);
             this.doc.put('docName', []);
             this.doc.put('docPhone', []);
-            this.doc.put('lines', [{from:Blockchain.transaction.from, name: [], phone: []}]);
-        }  
+            this.doc.put('lines', [{from:Blockchain.transaction.from, name: [], phone: []}]); 
+        }
+        return 1
     }
 };
 module.exports = Prizerdoc;

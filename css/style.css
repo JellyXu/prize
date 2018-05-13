@@ -6,12 +6,15 @@
 .inputBox p{line-height:80px;text-align:center;font-size:50px; color: #ffffff}
 .inputBox input{color: black;}
 .inputBox span{border-radius:10px;margin:20px 0;color:#ffffff;text-align:left;font-size:60px;}
-.start,.stop{float:left;width:200px;height:80px;line-height:80px;text-align:center;font-size:64px;border-radius:10px;margin:50px;color:#ffffff;cursor: pointer;margin-top: 20px;}
+.start,.stop{float:left;width:180px;height:80px;line-height:80px;text-align:center;font-size:64px;border-radius:10px;margin:20px;color:#ffffff;cursor: pointer;margin-top: 20px;}
 .start{background: #24ADD7;}
 .stop{background: #FC6666;}
 .tips{
 	color: white;
 	font-size: 16px;
+}
+.zhuyi{
+	color: #FC6666;
 }
 #noExtension{
 	color: white;
@@ -19,11 +22,18 @@
 	opacity: 0.9;
 	font-size: 20px;
 }
+#reset{
+	background: #FC6666;
+	float: left;
+	width:180px;height:80px;line-height:80px;text-align:center;font-size:64px;border-radius:10px;margin:auto;color:#ffffff;cursor: pointer;
+	margin: 20;
+	margin-top: 20px;
+}
 #getPerson {
 	background: green;
 	float: right;
-	width:200px;height:80px;line-height:80px;text-align:center;font-size:64px;border-radius:10px;margin:auto;color:#ffffff;cursor: pointer;
-	margin: 50px;
+	width:180px;height:80px;line-height:80px;text-align:center;font-size:64px;border-radius:10px;margin:auto;color:#ffffff;cursor: pointer;
+	margin: 20px;
 	margin-top: 20px;
 }
 #prizeBox{
