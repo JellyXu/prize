@@ -88,7 +88,7 @@ function getStart() {
 
 function fixList() {
 	var result = getStatus()
-	if ((JSON.stringify(result) == "{}")) {
+	if ((JSON.stringify(result) != "{}")) {
 		var joinList = $("#joinList")
 		nameArr = result.name
 		phoneArr = result.phone
