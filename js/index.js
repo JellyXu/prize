@@ -4,7 +4,7 @@ var t
 
 var NebPay = require("nebpay"); //https://github.com/nebulasio/nebPay
 var nebPay = new NebPay();
-var dappAddress = 'n1yV3RmESnhYzXtTKMSK1wWaLfLXgdHZEJN';
+var dappAddress = 'n1pRb5tULaYU8rQxSEDRb3HzfU6kecbYa2e';
 var nameArr = []
 var phoneArr = []
 var buttonSide = $("#buttonSide")
@@ -25,14 +25,19 @@ function init() {
 	fixList();
 	timer = setInterval(function () {
 		fixList();
-	}, 1500);
+	}, 15000);
 }
 
 $("#addPerson").click(function () {
-	var name = $name.text()
-	var phone = $phone.text()
+	var name = $name.val()
+	var phone = $phone.val()
+	if (name == "" && phone == "") {
+		alert("信息要填写完整哦~！")
+		return
+	}
 	// 判断是否有重复的
-	if ($.inArray(name, nameArr) || $.inArray(phone, phoneArr)) {
+	if ($.inArray(name, nameArr) === 1 && $.inArray(phone, phoneArr) === 1) {
+		alert("该名单已经存在了")
 		return
 	}
 	var to = dappAddress;
@@ -45,30 +50,14 @@ $("#addPerson").click(function () {
 			num += 1
 			nameArr.push(name)
 			phoneArr.push(phone)
+			$('#joinList').prepend("<p>" + name + "-" + phone + "</p>");
 		}
 	});
-	$('#joinList').prepend("<p>" + td + ' ' + name + "-" + phone + "</p>");
 })
 
 $("#getPerson").click(function () {
 	start()
 })
-
-function getStatus() {
-	var to = dappAddress;
-	var value = "0";
-	var callFunction = "get"
-	var callArgs;
-	var self = {}
-	nebPay.simulateCall(to, value, callFunction, callArgs, { //使用nebpay的simulateCall接口去执行get查询, 模拟执行.不发送交易,不上链
-		listener: function (resp) {
-			var doc = JSON.parse(resp.result);
-			self.name = doc.name;
-			self.phone = doc.phone;
-		}
-	})
-	return self
-}
 
 function getStart() {
 	var to = dappAddress;
@@ -87,17 +76,24 @@ function getStart() {
 }
 
 function fixList() {
-	var result = getStatus()
-	if ((JSON.stringify(result) != "{}")) {
-		var joinList = $("#joinList")
-		nameArr = result.name
-		phoneArr = result.phone
-		num = nameArr.length
-		joinList.html("")
-		for (var i = 0; i < num; i++) {
-			$('#joinList .list').prepend("<p>" + td + ' ' + names[i] + "-" + phones[i] + "</p>");
+	var to = dappAddress;
+	var value = "0";
+	var callFunction = "get"
+	var callArgs;
+	nebPay.simulateCall(to, value, callFunction, callArgs, { //使用nebpay的simulateCall接口去执行get查询, 模拟执行.不发送交易,不上链
+		listener: function (resp) {
+			var doc = JSON.parse(resp.result);
+			var joinList = $("#joinList")
+			nameArr = doc.name
+			phoneArr = doc.phone
+			num = nameArr.length
+			joinList.html("")
+			for (var i = 0; i < num; i++) {
+				$('#joinList .list').prepend("<p>" + nameArr[i] + "-" + phoneArr[i] + "</p>");
+			}
 		}
-	}
+	})
+
 }
 
 //开始停止
@@ -117,8 +113,8 @@ function start() {
 		var phone = result.phone
 		$prizeBox.hide()
 		$joinBox.show()
-		$name.text(name)
-		$phone.text(phone)
+		$name.val(name)
+		$phone.val(phone)
 		$('#prizeList').prepend("<p>" + td + ' ' + name + "-" + phone + "</p>");
 		$btnTxt.removeClass('stop').addClass('start');
 		// 设置添加按钮可用
@@ -130,8 +126,8 @@ function start() {
 //循环参加名单
 function startNum() {
 	var showNum = Math.floor(Math.random() * num);
-	$name(nameArr[showNum]);
-	$phone(phoneArr[showNum]);
+	$name.val(nameArr[showNum]);
+	$phone.val(phoneArr[showNum]);
 	t = setTimeout(startNum, 0);
 }
 //停止跳动

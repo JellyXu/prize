@@ -14,6 +14,7 @@ Prizerdoc.prototype = {
 
     add: function (person) {
         var status = parseInt(this.doc.get('status'));
+        console.log("1111111111这里" + person)
         var name = person[0]
         var phone = person[1]
         if(status === 0){
@@ -23,14 +24,15 @@ Prizerdoc.prototype = {
             throw new Error(lines);
         }
         var lines = this.doc.get('documentLines')
-        lines.push({from:Blockchain.transaction.from, name: name, phoneNum: phoneNum});
+        lines.push({from:Blockchain.transaction.from, name: name, phoneNum: phone});
         this.doc.put('documentNameLines',lines);
         var docName = this.doc.get('docName')
+        console.log(docName)
         docName.push(name)
         this.doc.put('docName', docName)
-        var docName = this.doc.get('docPhone')
-        docName.push(phoneNum)
-        this.doc.put('docPhone', phoneNum)
+        var docPhone = this.doc.get('docPhone')
+        docPhone.push(phone)
+        this.doc.put('docPhone', docPhone)
         
     },
 

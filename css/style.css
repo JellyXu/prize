@@ -6,7 +6,7 @@
 .inputBox p{line-height:80px;text-align:center;font-size:50px; color: #ffffff}
 .inputBox input{color: black;}
 .inputBox span{border-radius:10px;margin:20px 0;color:#ffffff;text-align:left;font-size:60px;}
-.start,.stop{float:right;width:200px;height:80px;line-height:80px;text-align:center;font-size:64px;border-radius:10px;margin:50px;color:#ffffff;cursor: pointer;margin-top: 20px;}
+.start,.stop{float:left;width:200px;height:80px;line-height:80px;text-align:center;font-size:64px;border-radius:10px;margin:50px;color:#ffffff;cursor: pointer;margin-top: 20px;}
 .start{background: #24ADD7;}
 .stop{background: #FC6666;}
 .tips{
@@ -21,7 +21,7 @@
 }
 #getPerson {
 	background: green;
-	float: left;
+	float: right;
 	width:200px;height:80px;line-height:80px;text-align:center;font-size:64px;border-radius:10px;margin:auto;color:#ffffff;cursor: pointer;
 	margin: 50px;
 	margin-top: 20px;
