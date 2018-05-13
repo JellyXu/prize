@@ -1,10 +1,10 @@
-var runing = true;
-var num = 0;
-var t;
+var runing = true
+var num = 0
+var t
 
 var NebPay = require("nebpay"); //https://github.com/nebulasio/nebPay
 var nebPay = new NebPay();
-var dappAddress = 'n1Pm2EVNCaafggZxTY6FioW9qYawcs216pE'; //改成我的地址
+var dappAddress = 'n1XxLJqMNoxTyi5G3NdAj9Xb7j7uQj3TFVA';
 var nameArr = []
 var phoneArr = []
 var buttonSide = $("#buttonSide")
