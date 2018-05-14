@@ -4,7 +4,7 @@ var t
 
 var NebPay = require("nebpay"); //https://github.com/nebulasio/nebPay
 var nebPay = new NebPay();
-var dappAddress = 'n1t9YUQ76ka37R9Fwv1gaUgMz5WMrLMPC1S';
+var dappAddress = 'n1zU7b7UMyCC6tVJ2BCwkAsjUvcQsJc67MH';
 var nameArr = []
 var phoneArr = []
 var buttonSide = $("#buttonSide")
