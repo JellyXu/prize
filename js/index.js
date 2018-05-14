@@ -4,7 +4,7 @@ var t
 
 var NebPay = require("nebpay"); //https://github.com/nebulasio/nebPay
 var nebPay = new NebPay();
-var dappAddress = 'n1zU7b7UMyCC6tVJ2BCwkAsjUvcQsJc67MH';
+var dappAddress = 'n1kseaxr7FhYPrHrjW6epyTWnvQ9W3DxhNQ';
 var nameArr = []
 var phoneArr = []
 var buttonSide = $("#buttonSide")
@@ -87,7 +87,7 @@ function fixList() {
 	var value = "0";
 	var callFunction = "get"
 	var callArgs;
-	nebPay.simulateCall(to, value, callFunction, callArgs, { //使用nebpay的simulateCall接口去执行get查询, 模拟执行.不发送交易,不上链
+	nebPay.simulateCall(to, value, callFunction, callArgs, {
 		listener: function (resp) {
 			var doc = JSON.parse(resp.result);
 			nameArr = doc.name
@@ -118,27 +118,37 @@ function start() {
 		runing = true;
 		var to = dappAddress;
 		var value = "0";
-		var callFunction = "start";
-		var callArgs;
+		var callFunction1 = "get"
+		var callArgs1
+		var callFunction2 = "start";
+		var callArgs2;
 		var self = {}
-		nebPay.simulateCall(to, value, callFunction, callArgs, { //使用nebpay的simulateCall接口去执行get查询, 模拟执行.不发送交易,不上链
+		// 因为单个方法不支持又修改又返回数值，所以两个分开做
+		nebPay.simulateCall(to, value, callFunction1, callArgs1, {
 			listener: function (resp) {
 				var doc = JSON.parse(resp.result);
-				var name = doc.name
-				var phone = doc.phone
+				var name = doc.prize
+				var phone = doc.phoneNum
+				var randomNum = doc.randomNumber
 				$joinBox.hide()
 				$prizeBox.show()
 				$reset.show()
 				$addPerson.show()
-				$name.val(name)
-				$phone.val(phone)
 				$('#prizeList').prepend("<p>" + ' ' + name + "-" + phone + "</p>");
 				$btnTxt.removeClass('stop').addClass('start');
 				// 设置添加按钮可用
 				$btnTxt.html('抽奖');
-				stop();
+				stop(name, phone);
+				callArgs2 = JSON.stringify([randomNum])
+				// 删除一下中奖的数组元素
+				nebPay.call(to, value, callFunction2, callArgs2, {
+					listener: function (resp) {
+						//
+					}
+				});
 			}
-		});
+		})
+		
 	}
 
 }
@@ -150,7 +160,9 @@ function startNum() {
 	t = setTimeout(startNum, 0);
 }
 //停止跳动
-function stop() {
+function stop(name, phone) {
 	clearInterval(t);
+	$name.val(name);
+	$phone.val(phone);
 	t = 0;
 }

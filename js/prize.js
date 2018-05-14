@@ -9,6 +9,8 @@ Prizerdoc.prototype = {
         this.doc.put('documentLines', []);
         this.doc.put('docName', [])
         this.doc.put('docPhone',[])
+        this.doc.put('prize', [])
+        this.doc.put('phone',[])
     },
 
     add: function (person) {
@@ -36,30 +38,33 @@ Prizerdoc.prototype = {
     get: function() {
         var nameArr = this.doc.get('docName')
         var phoneArr = this.doc.get('docPhone')
+        var length = phoneArr.length
+        var targetNumber = parseInt(Math.random() * length)
+        var prize = nameArr[targetNumber]
+        var phoneNum = phoneArr[targetNumber]
         var doc = {
             status: this.doc.get('status'),
             name: nameArr,
             phone: phoneArr,
+            prize: prize,
+            phoneNum: phoneNum,
+            randomNumber: targetNumber,
         }
         return doc;
     },
 
-    start: function() {
-        var doc = this.get()
-        var nameArr = doc.name
-        var phoneArr = doc.phone
-        var length = doc.name.length
-        var targetNumber = parseInt(Math.random() * length)
+    start: function(targetNumber) {
+        var nameArr = this.doc.get('docName')
+        var phoneArr = this.doc.get('docPhone')
+        var length = nameArr.length
         var name = nameArr[targetNumber]
         var phone = phoneArr[targetNumber]
         nameArr.splice(targetNumber, 1);
 	    phoneArr.splice(targetNumber, 1);
         this.doc.put('docName', nameArr)
         this.doc.put('docPhone', phoneArr)
-        return {
-            name: name,
-            phone: phone,
-        }
+        this.doc.put("prize", name)
+        this.doc.put("phone", phone)
     },
 
     restart : function(int) {
