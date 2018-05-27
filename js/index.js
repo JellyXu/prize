@@ -89,6 +89,9 @@ function fixList() {
 	var callArgs;
 	nebPay.simulateCall(to, value, callFunction, callArgs, {
 		listener: function (resp) {
+			if (resp.result == "") {
+				return
+			}
 			var doc = JSON.parse(resp.result);
 			nameArr = doc.name
 			phoneArr = doc.phone
@@ -126,6 +129,9 @@ function start() {
 		// 因为单个方法不支持又修改又返回数值，所以两个分开做
 		nebPay.simulateCall(to, value, callFunction1, callArgs1, {
 			listener: function (resp) {
+				if (resp.result == "") {
+					return
+				}
 				var doc = JSON.parse(resp.result);
 				var name = doc.prize
 				var phone = doc.phoneNum
@@ -143,7 +149,12 @@ function start() {
 				// 删除一下中奖的数组元素
 				nebPay.call(to, value, callFunction2, callArgs2, {
 					listener: function (resp) {
-						//
+						for(var k = 0; k < nameArr.length; k++) {
+							if (nameArr[k] == name) {
+								nameArr.splice(k, 1)
+								phoneArr.splice(k, 1)
+							}
+						}
 					}
 				});
 			}
